@@ -5,14 +5,6 @@ import { buildMatchFilter } from "@/utils/matchFilter";
 
 const monthOrder = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-function formatDateString(date: Date, endOfDay = false): string {
-  const yyyy = date.getFullYear();
-  const mm = (date.getMonth() + 1).toString().padStart(2, "0");
-  const dd = date.getDate().toString().padStart(2, "0");
-  const time = endOfDay ? "23:59:59" : "00:00:00";
-  return `${yyyy}-${mm}-${dd} ${time}`;
-}
-
 export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
