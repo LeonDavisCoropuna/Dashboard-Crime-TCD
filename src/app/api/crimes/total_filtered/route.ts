@@ -3,8 +3,6 @@ import clientPromise from "@/lib/mongo";
 import { CrimeRecord } from "@/interface/crime_records";
 import { buildMatchFilter } from "@/utils/matchFilter";
 
-const seasonOrder = ["Spring", "Summer", "Autumn", "Winter"];
-
 export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
