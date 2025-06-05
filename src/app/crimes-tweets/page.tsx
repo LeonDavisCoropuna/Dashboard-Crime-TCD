@@ -13,14 +13,26 @@ import { Button } from "@/components/ui/button";
 import { useFiltersStore } from "@/store/useFiltersStore"
 import { Boxplot } from "@/components/charts/BoxPlots";
 import { BoxplotVariableSelector } from "@/components/filters/BoxplotVariableSelector";
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const filters = useFiltersStore()
+  const router = useRouter()
+  const handleVolverInicio = () => {
+    router.push('/'); // Ruta a la página principal
+  };
   return (
     <div className="dashboard-container">
       {/* Header */}
-      <div className="header">
-        <h1>Dashboard de Análisis Criminal</h1>
+      <div className="header flex justify-between items-start gap-4 p-4">
+        <h1 className="text-3xl font-bold">Dashboard de Análisis Criminal de Tweets</h1>
+
+        <button
+          onClick={handleVolverInicio}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          Volver a seleccionar dataset
+        </button>
       </div>
 
       {/* Filtros */}
@@ -68,7 +80,7 @@ export default function Home() {
         </div>
 
         {/* Categorías */}
-        <div className="categories">
+        <div className="categories w-full text-center">
           <h2>Distribución de crímenes por hora</h2>
           <CrimesByHourChart />
         </div>
@@ -90,7 +102,7 @@ export default function Home() {
         {/* Segunda fila - BoxPlot (50% de altura) */}
         <div className="flex-1 min-h-0 w-full">
           <h2 className="text-center py-2 text-lg font-semibold">Gráfico BoxPlot</h2>
-          <div className="h-[calc(100%-40px)]">
+          <div className="h-[calc(100%-40px)] justify-center items-center flex">
             <Boxplot />
           </div>
         </div>

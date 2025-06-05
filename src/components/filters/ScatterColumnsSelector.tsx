@@ -16,7 +16,7 @@ const tweetColumns = [
 ]
 
 export function ScatterColumnsSelector() {
-  const { xAxis, yAxis, colorBy, setXAxis, setYAxis, setColorBy } = useScatterStore()
+  const { xAxis, yAxis, setXAxis, setYAxis } = useScatterStore()
 
   const renderDropdown = (
     label: string,
@@ -47,7 +47,6 @@ export function ScatterColumnsSelector() {
     <div className="flex gap-4 flex-wrap">
       {renderDropdown("Eje X", xAxis, setXAxis)}
       {renderDropdown("Eje Y", yAxis, setYAxis)}
-      {renderDropdown("Color", colorBy, setColorBy)}
     </div>
   )
 }

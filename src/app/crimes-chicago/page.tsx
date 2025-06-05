@@ -11,6 +11,7 @@ import { TimeContextFilter } from "@/components/filters/TimeContextFilter";
 import { Button } from "@/components/ui/button";
 import { useFiltersStore } from "@/store/useFiltersStore"
 import dynamic from "next/dynamic";
+import { useRouter } from 'next/navigation';
 
 const CrimesMapChart = dynamic(() => import("@/components/CrimesMapChart"), {
   ssr: false,
@@ -18,11 +19,24 @@ const CrimesMapChart = dynamic(() => import("@/components/CrimesMapChart"), {
 
 export default function Home() {
   const filters = useFiltersStore()
+
+  const router = useRouter()
+
+  const handleVolverInicio = () => {
+    router.push('/'); // Ruta a la página principal
+  };
   return (
     <div className="dashboard-container">
       {/* Header */}
-      <div className="header">
-        <h1>Dashboard de Análisis Criminal</h1>
+      <div className="header flex justify-between items-start gap-4 p-4">
+        <h1 className="text-3xl font-bold">Dashboard de Análisis Criminal de Fuente Oficial</h1>
+
+        <button
+          onClick={handleVolverInicio}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          Volver a seleccionar dataset
+        </button>
       </div>
 
       {/* Filtros */}
@@ -66,7 +80,7 @@ export default function Home() {
         </div>
 
         {/* Categorías */}
-        <div className="categories">
+        <div className="categories w-full text-center">
           <h2>Distribución de crímenes por hora</h2>
           <CrimesByHourChart />
         </div>
