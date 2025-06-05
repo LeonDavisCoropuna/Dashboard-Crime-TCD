@@ -1,0 +1,52 @@
+export interface CrimeRecord {
+  _id: string; // ObjectId, a veces string en TS
+  Unnamed_0: number;
+  ID: number;
+  CaseNumber: string;
+  Date: string; // Podrías usar Date pero aquí viene como string
+  Block: string;
+  ICode: string;
+  Category: string;
+  Description: string;
+  LocationDescription: string;
+  Arrest: boolean;
+  Domestic: boolean;
+  Beat: number;
+  District: number;
+  Ward: number;
+  CommunityArea: number;
+  FCode: string;
+  X: number;
+  Y: number;
+  Year: number;
+  UpdatedOn: string;
+  Latitude: number;
+  Longitude: number;
+  Location: string;
+  Radius: number;
+  Angle: number;
+  X_scaled: number;
+  Y_scaled: number;
+  Cluster: number;
+  Rot30_X: number;
+  Rot30_Y: number;
+  Rot45_X: number;
+  Rot45_Y: number;
+  Rot60_X: number;
+  Rot60_Y: number;
+  Month: number;
+  dayOfWeek: number;
+  dayOfMonth: number;
+  dayOfYear: number;
+  weekOfMonth: number;
+  weekOfYear: number;
+  Hour: number;
+  Minute: number;
+  Hour_Zone: string;
+  BusinessHour: number;
+  Weekend: number;
+  Season: string;
+  Holiday: number;
+  cluster: number;
+  count_crimes: number;
+}
