@@ -90,10 +90,11 @@ export const CrimeStationChart = () => {
 
     const maxCount = d3.max(Object.values(data)) ?? 1
 
-    let tooltip = d3.select(tooltipRef.current)
-    if (tooltip.empty()) {
-      tooltip = d3
-        .select("body")
+    // Definir tooltip (div)
+    let tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement | null, any>
+
+    if (!tooltipRef.current) {
+      tooltip = d3.select("body")
         .append("div")
         .attr("class", "tooltip")
         .style("position", "absolute")
@@ -106,6 +107,9 @@ export const CrimeStationChart = () => {
         .style("opacity", 0)
 
       tooltipRef.current = tooltip.node() as HTMLDivElement
+    } else {
+      // Aquí TypeScript ya sabe que tooltipRef.current no es null
+      tooltip = d3.select<HTMLDivElement, unknown>(tooltipRef.current)
     }
 
     const pieData = pie(Object.entries(data))

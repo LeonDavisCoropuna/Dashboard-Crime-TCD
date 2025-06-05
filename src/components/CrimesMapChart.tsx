@@ -3,6 +3,8 @@ import "leaflet/dist/leaflet.css"
 import { useEffect, useState } from "react"
 import * as d3 from "d3"
 import { useFiltersStore } from "@/store/useFiltersStore"
+import { Feature, Geometry, GeoJsonProperties, FeatureCollection } from 'geojson'
+import { PathOptions } from 'leaflet'
 
 type ClusterPoint = {
   Latitude: number
@@ -13,7 +15,7 @@ type ClusterPoint = {
 
 export const CrimesMapChart = () => {
   const { start, end, categories, arrest, district, ward, setFilter } = useFiltersStore()
-  const [geoData, setGeoData] = useState<GeoJSON.FeatureCollection | null>(null)
+  const [geoData, setGeoData] = useState<FeatureCollection<Geometry, GeoJsonProperties> | null>(null)
   const [clusters, setClusters] = useState<ClusterPoint[]>([])
 
   useEffect(() => {
@@ -57,9 +59,11 @@ export const CrimesMapChart = () => {
     [42.0230, -87.5237],
   ]
 
-  const styleFeature = (feature: GeoJSON.Feature) => {
-    const wardNumber = feature.properties?.ward || null
+
+  const styleFeature = (feature?: Feature<Geometry, GeoJsonProperties>): PathOptions => {
+    const wardNumber = feature?.properties?.ward ?? null
     const isSelected = wardNumber === ward
+
     return {
       color: isSelected ? "#ff7800" : "#555",
       weight: isSelected ? 3 : 1,
