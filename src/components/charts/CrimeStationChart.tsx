@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import * as d3 from "d3"
 import { useFiltersStore } from "@/store/useFiltersStore"
 import { filtersToSearchParams } from "@/utils/filterSearchParams"
+import { usePathname } from "next/navigation"
 
 const seasonLabels = {
   Winter: "Winter",
@@ -18,6 +19,9 @@ export const CrimeStationChart = () => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const tooltipRef = useRef<HTMLDivElement | null>(null)
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+
+  const pathname = usePathname(); // obtener path actual
+  const collectionName = pathname?.includes("crimes-chicago") ? "crimes_2020" : "tweets_2020";
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -38,6 +42,8 @@ export const CrimeStationChart = () => {
 
   useEffect(() => {
     const params = filtersToSearchParams(filters)
+    params.set("collection", collectionName); // añades el param collection
+
     const controller = new AbortController()
 
     fetch(`/api/crimes/station?${params.toString()}`, {
@@ -87,8 +93,6 @@ export const CrimeStationChart = () => {
       .arc<d3.PieArcDatum<[string, number]>>()
       .innerRadius(0)
       .outerRadius(radius)
-
-    const maxCount = d3.max(Object.values(data)) ?? 1
 
     // Definir tooltip (div)
     let tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement | null, any>

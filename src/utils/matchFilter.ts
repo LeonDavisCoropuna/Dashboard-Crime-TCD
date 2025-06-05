@@ -6,8 +6,9 @@ function formatDateString(date: Date, endOfDay = false): string {
   return `${yyyy}-${mm}-${dd} ${time}`;
 }
 
-export function buildMatchFilter(params: URLSearchParams) {
+export function buildMatchFilter(params: URLSearchParams, collectionName?: string) {
   const matchFilter: any = {};
+  const categoryField = collectionName === "tweets_2020" ? "Category-skywalker" : "Category";
 
   const start = params.get("start");
   const end = params.get("end");
@@ -38,8 +39,10 @@ export function buildMatchFilter(params: URLSearchParams) {
     }
   }
 
+
   if (categories.length > 0) {
-    matchFilter.Category = { $in: categories.map(c => c.toUpperCase()) };
+    // Para el filtro, usamos el campo correcto
+    matchFilter[categoryField] = { $in: categories };
   }
 
   if (arrestParam !== null) {

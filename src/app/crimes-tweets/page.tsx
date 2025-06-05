@@ -4,17 +4,15 @@ import { CrimeMonthChart } from "@/components/charts/CrimeMonthChart";
 import { CrimePorcentajeChart } from "@/components/charts/CrimePorcentajeChart";
 import { CrimesByHourChart } from "@/components/charts/CrimesByHourChart";
 import { CrimeStationChart } from "@/components/charts/CrimeStationChart";
-import { ArrestFilter } from "@/components/filters/ArrestFilter";
+import { Scatterplot } from "@/components/charts/ScatterPlot";
 import { CategoriesFilter } from "@/components/filters/CategoriesFilter";
+import { ScatterColumnsSelector } from "@/components/filters/ScatterColumnsSelector";
 import { DateRangeFilter } from "@/components/filters/DateRangeFilter";
 import { TimeContextFilter } from "@/components/filters/TimeContextFilter";
 import { Button } from "@/components/ui/button";
 import { useFiltersStore } from "@/store/useFiltersStore"
-import dynamic from "next/dynamic";
-
-const CrimesMapChart = dynamic(() => import("@/components/CrimesMapChart"), {
-  ssr: false,
-});
+import { Boxplot } from "@/components/charts/BoxPlots";
+import { BoxplotVariableSelector } from "@/components/filters/BoxplotVariableSelector";
 
 export default function Home() {
   const filters = useFiltersStore()
@@ -36,16 +34,20 @@ export default function Home() {
           <CategoriesFilter />
         </div>
         <div className="filter-item">
-          <label>Arrestos</label>
-          <ArrestFilter />
-        </div>
-        <div className="filter-item">
           <label>Tiempo</label>
           <TimeContextFilter />
         </div>
         <div className="filter-item">
           <label>Tiempo</label>
           <Button onClick={() => filters.resetFilters()}>Reset filtros</Button>
+        </div>
+        <div className="filter-item">
+          <label>Scatter X, Y</label>
+          <ScatterColumnsSelector />
+        </div>
+        <div className="filter-item">
+          <label>Boxplot de X</label>
+          <BoxplotVariableSelector />
         </div>
       </div>
 
@@ -73,9 +75,25 @@ export default function Home() {
       </div>
 
       {/* Mapa */}
-      <div className="map bg-red-800 w-full h-full flex flex-col items-center justify-center">
-        <h2>Distribución Geográfica de Incidentes</h2>
-        <CrimesMapChart />
+      <div className="map bg-red-800 w-full h-full flex flex-col">
+        {/* Primera fila - Scatter Plot (50% de altura) */}
+        <div className="flex-1 min-h-0 w-full"> {/* flex-1 + min-h-0 es clave para el crecimiento controlado */}
+          <h2 className="text-center py-2 text-lg font-semibold">Gráfico Scatter Plot</h2>
+          <div className="h-[calc(100%-40px)]"> {/* Restamos el espacio del título */}
+            <Scatterplot />
+          </div>
+        </div>
+
+        {/* Separador visual opcional */}
+        <div className="border-t border-gray-300 my-2"></div>
+
+        {/* Segunda fila - BoxPlot (50% de altura) */}
+        <div className="flex-1 min-h-0 w-full">
+          <h2 className="text-center py-2 text-lg font-semibold">Gráfico BoxPlot</h2>
+          <div className="h-[calc(100%-40px)]">
+            <Boxplot />
+          </div>
+        </div>
       </div>
       {/* Gráficos exploratorios */}
       <div className="exploratory">

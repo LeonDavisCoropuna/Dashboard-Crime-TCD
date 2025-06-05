@@ -8,11 +8,23 @@ const seasonOrder = ["Spring", "Summer", "Autumn", "Winter"];
 export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
+    const collectionName = url.searchParams.get("collection") || "crimes_2020";
+
     const client = await clientPromise;
     const db = client.db("crime_db");
-    const collection = db.collection<CrimeRecord>("crimes_2020");
 
-    const matchFilter = buildMatchFilter(url.searchParams);
+    // Validar collections permitidas para seguridad
+    const allowedCollections = ["crimes_2020", "tweets_2020"];
+    if (!allowedCollections.includes(collectionName)) {
+      return NextResponse.json(
+        { error: "Colección no permitida" },
+        { status: 400 }
+      );
+    }
+
+    const collection = db.collection(collectionName);
+
+    const matchFilter = buildMatchFilter(url.searchParams, collectionName);
 
     const pipeline = [
       { $match: matchFilter },

@@ -2,14 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { useFiltersStore } from "@/store/useFiltersStore";
 import * as d3 from "d3";
 import { filtersToSearchParams } from "@/utils/filterSearchParams";
+import { usePathname } from "next/navigation"; // solo Next.js 13+ con app router
 
 export const CrimePorcentajeChart = () => {
   const filters = useFiltersStore();
   const [percentage, setPercentage] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const pathname = usePathname(); // obtener path actual
+  const collectionName = pathname?.includes("crimes-chicago") ? "crimes_2020" : "tweets_2020";
 
   useEffect(() => {
     const params = filtersToSearchParams(filters);
+    params.set("collection", collectionName); // añades el param collection
+
     const controller = new AbortController();
 
     fetch(`/api/crimes/total_filtered?${params.toString()}`, {

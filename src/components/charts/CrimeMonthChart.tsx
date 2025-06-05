@@ -2,10 +2,14 @@ import { useEffect, useRef, useState } from "react"
 import * as d3 from "d3"
 import { useFiltersStore } from "@/store/useFiltersStore"
 import { filtersToSearchParams } from "@/utils/filterSearchParams"
+import { usePathname } from "next/navigation"; // solo Next.js 13+ con app router
+
 const monthOrder = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 export const CrimeMonthChart = () => {
   const filters = useFiltersStore(); const [data, setData] = useState<Record<string, number>>({})
+  const pathname = usePathname(); // obtener path actual
+  const collectionName = pathname?.includes("crimes-chicago") ? "crimes_2020" : "tweets_2020";
 
   const svgRef = useRef<SVGSVGElement | null>(null)
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -32,6 +36,8 @@ export const CrimeMonthChart = () => {
 
   useEffect(() => {
     const params = filtersToSearchParams(filters);
+    params.set("collection", collectionName); // añades el param collection
+
     const controller = new AbortController();
 
     fetch(`/api/crimes/month?${params.toString()}`, {
@@ -51,7 +57,7 @@ export const CrimeMonthChart = () => {
     return () => {
       controller.abort();
     };
-  }, [filters]);
+  }, [filters, collectionName]);
 
   useEffect(() => {
     if (!data || Object.keys(data).length === 0) return
@@ -75,12 +81,14 @@ export const CrimeMonthChart = () => {
 
     const maxCount = d3.max(dataArray, (d) => d.count) || 0
 
-    const maxY = 20000; // Fijar el máximo del eje Y en 20k
+
+    const values = Object.values(data);
+    const maxValue = d3.max(values) || 0;
 
     const y = d3
       .scaleLinear()
-      .domain([0, maxY])
-      .range([height - margin.bottom, margin.top])
+      .domain([0, maxValue])
+      .range([height - margin.bottom, margin.top]);
 
     // Escala de color (verde a rojo)
     const colorScale = d3.scaleLinear<string>()

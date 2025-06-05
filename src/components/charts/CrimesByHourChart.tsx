@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import * as d3 from "d3"
 import { useFiltersStore } from "@/store/useFiltersStore"
 import { filtersToSearchParams } from "@/utils/filterSearchParams"
+import { usePathname } from "next/navigation"
 
 export const CrimesByHourChart = () => {
   const filters = useFiltersStore()
@@ -12,6 +13,8 @@ export const CrimesByHourChart = () => {
   const tooltipRef = useRef<HTMLDivElement | null>(null)
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
 
+  const pathname = usePathname(); // obtener path actual
+  const collectionName = pathname?.includes("crimes-chicago") ? "crimes_2020" : "tweets_2020";
   useEffect(() => {
     if (!containerRef.current) return
 
@@ -31,6 +34,8 @@ export const CrimesByHourChart = () => {
 
   useEffect(() => {
     const params = filtersToSearchParams(filters)
+    params.set("collection", collectionName); // añades el param collection
+
     const controller = new AbortController()
 
     fetch(`/api/crimes/hour?${params.toString()}`, {
@@ -76,12 +81,15 @@ export const CrimesByHourChart = () => {
 
     const maxCount = d3.max(dataArray, (d) => d.count) || 0
 
-    const maxY = 12000; // Fijar el máximo del eje Y en 20k
+
+    const values = Object.values(data);
+    const maxValue = d3.max(values) || 0;
 
     const y = d3
       .scaleLinear()
-      .domain([0, maxY])
-      .range([height - margin.bottom, margin.top])
+      .domain([0, maxValue])
+      .range([height - margin.bottom, margin.top]);
+
 
     // Escala de color (verde a rojo)
     const colorScale = d3
