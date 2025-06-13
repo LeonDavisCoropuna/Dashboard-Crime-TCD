@@ -22,7 +22,6 @@ export const useCategoricalVariablesStore = create<CategoricalVariablesStore>((s
   const crimeInfo = {
     name: 'Información del Crimen',
     variables: [
-      'Block',
       'Category',
       'Description',
       'Location Description',

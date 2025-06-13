@@ -5,10 +5,12 @@ import { CrimeMonthChart } from "@/components/charts/CrimeMonthChart";
 import { CrimePorcentajeChart } from "@/components/charts/CrimePorcentajeChart";
 import { CrimesByHourChart } from "@/components/charts/CrimesByHourChart";
 import { CrimeStationChart } from "@/components/charts/CrimeStationChart";
+import { CrimesTreeChart } from "@/components/charts/CrimesTreeChart";
 import { NumericVariableChart } from "@/components/charts/NumericVariableChart";
 import { ArrestFilter } from "@/components/filters/ArrestFilter";
 import { CategoricalVaribleFilter } from "@/components/filters/CategoricalVaribleFilter";
 import { CategoriesFilter } from "@/components/filters/CategoriesFilter";
+import { CategoriesFilterTree } from "@/components/filters/CategoriesFilterTree";
 import { DateRangeFilter } from "@/components/filters/DateRangeFilter";
 import { NumericVariableFilter } from "@/components/filters/NumericVariableFilter";
 import { TimeContextFilter } from "@/components/filters/TimeContextFilter";
@@ -53,10 +55,6 @@ export default function Home() {
       <ScrollArea className="filters w-full max-w-md h-full max-h-full rounded-lg p-2">
         <div className="filters flex flex-col ">
           <div className="filter-item">
-            <label className="font-semibold">Categoría</label>
-            <CategoriesFilter />
-          </div>
-          <div className="filter-item">
             <NumericVariableFilter />
           </div>
           <div className="filter-item">
@@ -78,7 +76,9 @@ export default function Home() {
           <CategoricalVariableChart key={variable} variable={variable} />
         ))}
       </div>
-
+      <div className="crimes flex w-full min-h-screen justify-between items-center">
+        <CrimesTreeChart />
+      </div>
       {/* Mapa */}
       <div className="map bg-red-800 w-full h-full flex flex-col items-center justify-center">
         <h2>Distribución Geográfica de Incidentes</h2>
@@ -87,7 +87,7 @@ export default function Home() {
 
       {/* Gráfico porcentual */}
       <div className="exploratory">
-        <h2>Porcentaje de datos</h2>
+        <h2>Linea de Tiempo</h2>
         <DateRangeFilter />
       </div>
     </div>
