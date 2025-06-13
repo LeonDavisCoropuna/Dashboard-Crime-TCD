@@ -1,15 +1,22 @@
 "use client"
 
+import { CategoricalVariableChart } from "@/components/charts/CategoricalVaribleChart";
 import { CrimeMonthChart } from "@/components/charts/CrimeMonthChart";
 import { CrimePorcentajeChart } from "@/components/charts/CrimePorcentajeChart";
 import { CrimesByHourChart } from "@/components/charts/CrimesByHourChart";
 import { CrimeStationChart } from "@/components/charts/CrimeStationChart";
+import { NumericVariableChart } from "@/components/charts/NumericVariableChart";
 import { ArrestFilter } from "@/components/filters/ArrestFilter";
+import { CategoricalVaribleFilter } from "@/components/filters/CategoricalVaribleFilter";
 import { CategoriesFilter } from "@/components/filters/CategoriesFilter";
 import { DateRangeFilter } from "@/components/filters/DateRangeFilter";
+import { NumericVariableFilter } from "@/components/filters/NumericVariableFilter";
 import { TimeContextFilter } from "@/components/filters/TimeContextFilter";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useCategoricalVariablesStore } from "@/store/useCategoricalVariablesStore";
 import { useFiltersStore } from "@/store/useFiltersStore"
+import { useNumericVariablesStore } from "@/store/useNumericVariablesStore";
 import dynamic from "next/dynamic";
 import { useRouter } from 'next/navigation';
 
@@ -20,17 +27,20 @@ const CrimesMapChart = dynamic(() => import("@/components/CrimesMapChart"), {
 export default function Home() {
   const filters = useFiltersStore()
 
+  const selectedNumericVariables = useNumericVariablesStore((state) => state.selectedVariables)
+  const selectedCategoricalVariables = useCategoricalVariablesStore((state) => state.selectedVariables)
+
   const router = useRouter()
 
   const handleVolverInicio = () => {
-    router.push('/'); // Ruta a la página principal
+    router.push('/');
   };
+
   return (
     <div className="dashboard-container">
       {/* Header */}
-      <div className="header flex justify-between items-start gap-4 p-4">
+      <div className="header flex justify-between items-start p-4">
         <h1 className="text-3xl font-bold">Dashboard de Análisis Criminal de Fuente Oficial</h1>
-
         <button
           onClick={handleVolverInicio}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
@@ -39,51 +49,34 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Filtros */}
-      <div className="filters">
-        <div className="filter-item">
-          <label>Rango de fechas</label>
-          <DateRangeFilter />
-        </div>
-        <div className="filter-item">
-          <label>Categoría</label>
-          <CategoriesFilter />
-        </div>
-        <div className="filter-item">
-          <label>Arrestos</label>
-          <ArrestFilter />
-        </div>
-        <div className="filter-item">
-          <label>Tiempo</label>
-          <TimeContextFilter />
-        </div>
-        <div className="filter-item">
-          <label>Tiempo</label>
-          <Button onClick={() => filters.resetFilters()}>Reset filtros</Button>
-        </div>
-      </div>
-
-      {/* Visualizaciones principales */}
-      <div className="main-visualizations">
-
-        {/* Serie temporal */}
-        <div className="timeseries flex flex-col items-center justify-center w-full">
-          <h2>Tendencia por Meses y Estaciones</h2>
-          <div className="flex gap-x-1 w-full h-full">
-            <div className="w-2/3">
-              <CrimeMonthChart />
-            </div>
-            <div className="w-1/3">
-              <CrimeStationChart />
-            </div>
+      {/* Filtros con scroll */}
+      <ScrollArea className="filters w-full max-w-md h-full max-h-full rounded-lg p-2">
+        <div className="filters flex flex-col ">
+          <div className="filter-item">
+            <label className="font-semibold">Categoría</label>
+            <CategoriesFilter />
+          </div>
+          <div className="filter-item">
+            <NumericVariableFilter />
+          </div>
+          <div className="filter-item">
+            <CategoricalVaribleFilter />
           </div>
         </div>
 
-        {/* Categorías */}
-        <div className="categories w-full text-center">
-          <h2>Distribución de crímenes por hora</h2>
-          <CrimesByHourChart />
+        <div className="filter-item">
+          <Button onClick={() => filters.resetFilters()}>Reset filtros</Button>
         </div>
+      </ScrollArea>
+
+      {/* Visualizaciones principales */}
+      <div className="categories w-full grid grid-cols-4 max-h-full overflow-auto">
+        {selectedNumericVariables.map((variable) => (
+          <NumericVariableChart key={variable} variable={variable} />
+        ))}
+        {selectedCategoricalVariables.map((variable) => (
+          <CategoricalVariableChart key={variable} variable={variable} />
+        ))}
       </div>
 
       {/* Mapa */}
@@ -91,11 +84,12 @@ export default function Home() {
         <h2>Distribución Geográfica de Incidentes</h2>
         <CrimesMapChart />
       </div>
-      {/* Gráficos exploratorios */}
+
+      {/* Gráfico porcentual */}
       <div className="exploratory">
         <h2>Porcentaje de datos</h2>
-        <CrimePorcentajeChart />
+        <DateRangeFilter />
       </div>
-    </div >
+    </div>
   );
 }

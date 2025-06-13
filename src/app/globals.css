@@ -5,20 +5,22 @@
 
 .dashboard-container {
   display: grid;
-  min-height: 100vh;
-  grid-template-columns: 1fr 4fr 3fr;
+  height: 100vh; /* Asegura que no crezca más allá de la pantalla */
+  overflow: auto; /* Evita scroll general */
+  grid-template-columns: 1fr 4fr 2fr;
   grid-template-rows: auto 4fr 4fr auto;
   grid-template-areas:
     "header header header"
-    "filters timeseries map"
     "filters categories map"
-    "filters exploratory map";
+    "filters categories map"
+    "filters exploratory exploratory";
   gap: 1rem;
   padding: 1rem;
   box-sizing: border-box;
   background-color: #1e1e1e;
-  /* fondo general oscuro */
 }
+
+
 
 .header {
   grid-area: header;
@@ -40,11 +42,9 @@
 
 .filters {
   grid-area: filters;
-  padding: 1rem;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   color: #f0f0f0;
   background-color: #2a2a2a;
@@ -68,10 +68,6 @@
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
-}
-
-.main-visualizations {
-  display: contents;
 }
 
 .map {
@@ -177,10 +173,10 @@
     grid-template-areas:
       "header header"
       "filters filters"
-      "map timeseries"
-      "map categories"
-      "arrests exploratory"
-      "conclusions conclusions";
+      "map map"
+      "map map"
+      "categories categories"
+      "exploratory exploratory";
   }
 }
 
@@ -192,11 +188,11 @@
       "header"
       "filters"
       "map"
-      "timeseries"
       "categories"
-      "arrests"
-      "exploratory"
-      "conclusions";
+      "categories"
+      "categories"
+      "categories"
+      "exploratory";
     height: auto;
   }
 

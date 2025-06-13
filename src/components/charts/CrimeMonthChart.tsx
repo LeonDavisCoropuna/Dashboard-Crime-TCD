@@ -7,7 +7,8 @@ import { usePathname } from "next/navigation"; // solo Next.js 13+ con app route
 const monthOrder = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 export const CrimeMonthChart = () => {
-  const filters = useFiltersStore(); const [data, setData] = useState<Record<string, number>>({})
+  const filters = useFiltersStore(); 
+  const [data, setData] = useState<Record<string, number>>({})
   const pathname = usePathname(); // obtener path actual
   const collectionName = pathname?.includes("crimes-chicago") ? "crimes_2020" : "tweets_2020";
 
